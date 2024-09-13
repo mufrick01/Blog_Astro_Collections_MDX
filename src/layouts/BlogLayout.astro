@@ -1,10 +1,14 @@
 ---
-import ViewTransitions from 'astro/components/ViewTransitions.astro';
+import ViewTransitions from "astro/components/ViewTransitions.astro";
+import type { CollectionEntry } from "astro:content";
 
+interface Props {
+    title: string;
+    description: string;
+    author: string;
+}
 
-const { ...rest } = Astro.props;
-const frontMatter = rest.frontmatter;
-const {title,description,author} = frontMatter
+const { author, description, title } = Astro.props;
 ---
 
 <!doctype html>
@@ -15,9 +19,9 @@ const {title,description,author} = frontMatter
         <!-- SEO -->
         <meta name="description" content={description} />
         <meta name="author" content={author} />
-        <link rel="stylesheet" href="/src/styles/blog.css">
+        <link rel="stylesheet" href="/src/styles/blog.css" />
         <title>{title}</title>
-        <ViewTransitions/>
+        <ViewTransitions />
     </head>
     <body class="bg-gray-900 text-gray-200">
         <main class="mb-10 max-w-5xl m-auto p-2">

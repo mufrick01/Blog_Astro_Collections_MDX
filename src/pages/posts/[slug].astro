@@ -1,0 +1,46 @@
+---
+import type { GetStaticPaths } from "astro";
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BlogLayout from "src/layouts/BlogLayout.astro";
+
+export const getStaticPaths = (async () => {
+    const blogPost = await getCollection("blog");
+
+    return blogPost.map((post) => ({
+        params: { slug: post.slug },
+        props: { post },
+    }));
+}) satisfies GetStaticPaths;
+
+const { post } = Astro.props;
+const { data,slug } = post;
+const { author, description, title,image } = data;
+const { Content, headings } = await post.render();
+---
+
+<BlogLayout {author} {description} {title}>
+    <div class="my-2">
+        <h3 class="text-gray-600" >{author}</h3>
+    </div>
+    <Image src={image} alt="" class="image-banner" transition:name={`${slug}-image`}/>
+    <h3 class="text-xl mt-5">Lista de contenidos</h3>
+    <ol class="my-5">
+        {
+            headings.map((heading, index) => (
+                <li>
+                    <a href={`#${heading.slug}`}>
+                        {index + 1} - {heading.text}
+                    </a>
+                </li>
+            ))
+        }
+    </ol>
+    <Content />
+</BlogLayout>
+
+<style>
+    .image-banner{
+        @apply object-cover object-center h-[250px] w-full
+    }
+</style>
